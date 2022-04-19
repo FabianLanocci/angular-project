@@ -1,4 +1,5 @@
-# AngularLoginAdmin
+# angular-project
+Project with login, jwt authentication and authorization by roles
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.3.
 
