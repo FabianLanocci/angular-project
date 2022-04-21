@@ -10,7 +10,7 @@ import { UserService } from 'src/app/core/services/user.service';
 })
 export class HomeComponent implements OnInit {
   loading = false;
-  user: User;
+  user: User | null;
   userFromApi?: User;
 
   constructor(
@@ -22,10 +22,13 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading = true;
-    this.userService.getById(this.user.id).pipe(first()).subscribe(user => {
+    if(this.user) {
+      this.userService.getById(this.user.id).pipe(first()).subscribe(user => {
         this.loading = false;
         this.userFromApi = user;
     });
+    }
+
 }
 
 }

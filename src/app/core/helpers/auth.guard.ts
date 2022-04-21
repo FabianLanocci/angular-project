@@ -4,27 +4,31 @@ import { AuthenticationService } from '../services/authentication.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
-    constructor(
-        private router: Router,
-        private authenticationService: AuthenticationService
-    ) { }
 
-    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        const user = this.authenticationService.userValue;
-        if (user) {
-            // check if route is restricted by role
-            if (route.data.roles && route.data.roles.indexOf(user.role) === -1) {
-                // role not authorised so redirect to home page
-                this.router.navigate(['/']);
-                return false;
-            }
+  private role?: string | null;
 
-            // authorised so return true
-            return true;
-        }
+  constructor(
+      private router: Router,
+      private authenticationService: AuthenticationService
+  ) { }
 
-        // not logged in so redirect to login page with the return url
-        this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
-        return false;
-    }
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+      const user = this.authenticationService.userValue;
+      this.role = <string>localStorage.getItem('roleName');
+
+      if(user)
+      if (Object.keys(user).length > 0 && (this.role != "" && this.role != undefined)) {
+          if (route.data.roles && route.data.roles.indexOf(user.role) === -1) {
+              // role not authorised so redirect to home page
+              this.router.navigate(['/features/home']);
+              return false;
+          }
+          // authorised so return true
+          return true;
+      }
+
+      // not logged in so redirect to login page with the return url
+      this.router.navigate(['/auth']);
+      return false;
+  }
 }

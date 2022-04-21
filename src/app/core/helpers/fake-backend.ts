@@ -15,7 +15,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const { url, method, headers, body } = request;
 
-        return handleRoute();        
+        return handleRoute();
 
         function handleRoute() {
             switch (true) {
@@ -57,7 +57,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             if (!isLoggedIn()) return unauthorized();
 
             // only admins can access other user records
-            if (!isAdmin() && currentUser().id !== idFromUrl()) return unauthorized();
+            if (!isAdmin() && currentUser()!.id !== idFromUrl()) return unauthorized();
 
             const user = users.find(x => x.id === idFromUrl());
             return ok(user);
@@ -65,7 +65,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
         // helper functions
 
-        function ok(body) {
+        function ok(body:any) {
             return of(new HttpResponse({ status: 200, body }))
                 .pipe(delay(500)); // delay observable to simulate server api call
         }
@@ -75,7 +75,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                 .pipe(materialize(), delay(500), dematerialize()); // call materialize and dematerialize to ensure delay even if an error is thrown (https://github.com/Reactive-Extensions/RxJS/issues/648);
         }
 
-        function error(message) {
+        function error(message:any) {
             return throwError({ status: 400, error: { message } })
                 .pipe(materialize(), delay(500), dematerialize());
         }
@@ -86,12 +86,12 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }
 
         function isAdmin() {
-            return isLoggedIn() && currentUser().role === Role.Admin;
+            return isLoggedIn() && currentUser()!.role === Role.Admin;
         }
 
         function currentUser() {
             if (!isLoggedIn()) return;
-            const id = parseInt(headers.get('Authorization').split('.')[1]);
+            const id = parseInt(headers.get('Authorization')!.split('.')[1]);
             return users.find(x => x.id === id);
         }
 

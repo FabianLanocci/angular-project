@@ -23,10 +23,6 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private authenticationService: AuthenticationService
 ) {
-    // redirect to home if already logged in
-    if (this.authenticationService.userValue) {
-        this.router.navigate(['/']);
-    }
 }
 
   ngOnInit() : void {
@@ -34,6 +30,10 @@ export class LoginComponent implements OnInit {
           username: ['', Validators.required],
           password: ['', Validators.required]
       });
+
+      if (this.authenticationService.userValue) {
+        this.router.navigate(['features']);
+    }
   }
 
   // convenience getter for easy access to form fields
@@ -52,9 +52,9 @@ export class LoginComponent implements OnInit {
           .pipe(first())
           .subscribe({
               next: () => {
+                this.loading = false;
                   // get return url from query parameters or default to home page
-                  const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-                  this.router.navigateByUrl(returnUrl);
+                  this.router.navigate(['features'])
               },
               error: error => {
                   this.error = error;

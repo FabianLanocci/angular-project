@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Role } from '../core/models/role';
 import { User } from '../core/models/user';
 import { AuthenticationService } from '../core/services/authentication.service';
@@ -9,14 +10,23 @@ import { AuthenticationService } from '../core/services/authentication.service';
   styleUrls: ['./features.component.scss']
 })
 export class FeaturesComponent implements OnInit {
-  user?: User;
+  user?: User | null;
 
-  constructor(private authenticationService: AuthenticationService) {
-    this.authenticationService.user.subscribe(x => this.user = x);
+  constructor(
+    private authenticationService: AuthenticationService,
+    private route: ActivatedRoute,
+    private router: Router) {
   }
 
 
   ngOnInit(): void {
+    this.authenticationService.user.subscribe(x => {
+      this.user = x
+    }, error => {
+      console.log(error);
+    });
+    const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/features/home';
+    this.router.navigateByUrl(returnUrl);
   }
 
 
