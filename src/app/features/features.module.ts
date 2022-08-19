@@ -1,3 +1,4 @@
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AdminComponent } from './admin/admin.component';
 import { HomeComponent } from './home/home.component';
 import { FeaturesComponent } from './features.component';
@@ -13,7 +14,8 @@ import { FeaturesRoutingModule } from './features-routing.module';
   ],
   imports: [
     CommonModule,
-    FeaturesRoutingModule
+    FeaturesRoutingModule,
+    NgbModule
   ]
 })
 export class FeaturesModule { }
